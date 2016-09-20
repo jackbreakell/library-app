@@ -1,24 +1,41 @@
-// app/router.js
-
+// app/routes/libraries/edit.js
 import Ember from 'ember';
-import config from './config/environment';
 
-const Router = Ember.Router.extend({
-  location: config.locationType
+export default Ember.Route.extend({
+
+  model(params) {
+    return this.store.findRecord('library', params.library_id);
+  },
+
+  setupController(controller, model) {
+    this._super(controller, model);
+
+    controller.set('title', 'Edit library');
+    controller.set('buttonLabel', 'Save changes');
+  },
+
+  renderTemplate() {
+    this.render('libraries/form');
+  },
+
+  actions: {
+
+    saveLibrary(newLibrary) {
+      newLibrary.save().then(() => this.transitionTo('libraries'));
+    },
+
+    willTransition(transition) {
+      let model = this.controller.get('model');
+
+      if (model.get('hasDirtyAttributes')) {
+        let confirmation = confirm("Your changes haven't saved yet. Would you like to leave this form?");
+
+        if (confirmation) {
+          model.rollbackAttributes();
+        } else {
+          transition.abort();
+        }
+      }
+    }
+  }
 });
-
-Router.map(function() {
-
-  this.route('about');
-  this.route('contact');
-
-  this.route('admin', function() {
-    this.route('invitations');
-  });
-
-  this.route('libraries', function() {
-    this.route('new');
-  });
-});
-
-export default Router;
