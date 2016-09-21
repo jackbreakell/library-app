@@ -1,5 +1,4 @@
 // app/router.js
-
 import Ember from 'ember';
 import config from './config/environment';
 
@@ -8,7 +7,6 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-
   this.route('about');
   this.route('contact');
 
@@ -17,7 +15,6 @@ Router.map(function() {
     this.route('contacts');
     this.route('seeder');
   });
-
   this.route('libraries', function() {
     this.route('new');
     this.route('edit', { path: '/:library_id/edit' });
